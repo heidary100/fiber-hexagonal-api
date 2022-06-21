@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  fiber-application:
+    restart: always
+    image: fiber-api-image:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    ports:
+      - 8080:8080
+    environment:
+      - API_USERID=1
+      - API_USERNAME=fiber
+      - API_PASSWORD=fiber
+      - JWT_SECRET=fiber
+    networks:
+      - application
+    depends_on:
+      - mongodb_container
+    command: ./fiber-api
+
+  mongodb_container:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+networks:
+  application:
+
+volumes:
+  mongodb_data_container:
