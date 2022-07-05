@@ -16,8 +16,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func RunFiberApp(port string) {
-	db, cancel, err := databaseConnection()
+func RunFiberApp(port string, mongoUri string, dbName string) {
+	fmt.Println(port, mongoUri, dbName)
+	db, cancel, err := databaseConnection(mongoUri, dbName)
 	if err != nil {
 		log.Fatal("Database Connection Error $s", err)
 	}
@@ -37,15 +38,15 @@ func RunFiberApp(port string) {
 	log.Fatal(app.Listen(":" + port))
 }
 
-func databaseConnection() (*mongo.Database, context.CancelFunc, error) {
+func databaseConnection(mongoUri string, dbName string) (*mongo.Database, context.CancelFunc, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(
-		"mongodb://root:rootpassword@localhost:27017").SetServerSelectionTimeout(5*time.
+		mongoUri).SetServerSelectionTimeout(5*time.
 		Second))
 	if err != nil {
 		cancel()
 		return nil, nil, err
 	}
-	db := client.Database("fiber-api")
+	db := client.Database(dbName)
 	return db, cancel, nil
 }
