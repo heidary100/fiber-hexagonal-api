@@ -16,3 +16,8 @@ type UsersService interface {
 	// UpdateBook(book *entities.Book) (*entities.Book, error)
 	// RemoveBook(ID string) error
 }
+
+type MoviesService interface {
+	Search(Name string) error
+	FetchMovieUrls(Name string) (*[]presenter.Movie, error)
+}

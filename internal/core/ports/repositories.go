@@ -11,3 +11,9 @@ type UsersRepository interface {
 	UpdateUser(user *domain.User) (*domain.User, error)
 	DeleteUser(ID string) error
 }
+
+type MoviesRepository interface {
+	CreateMovie(user *domain.Movie) (*domain.Movie, error)
+	ReadMovie() (*[]presenter.Movie, error)
+	DeleteUser(ID string) error
+}
