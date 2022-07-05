@@ -1,4 +1,4 @@
-package main
+package httpserver
 
 import (
 	"context"
@@ -16,7 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func main() {
+func RunFiberApp(port string) {
 	db, cancel, err := databaseConnection()
 	if err != nil {
 		log.Fatal("Database Connection Error $s", err)
@@ -34,7 +34,7 @@ func main() {
 	api := app.Group("/api")
 	routes.UserRouter(api, userService)
 	defer cancel()
-	log.Fatal(app.Listen(":8080"))
+	log.Fatal(app.Listen(":" + port))
 }
 
 func databaseConnection() (*mongo.Database, context.CancelFunc, error) {
