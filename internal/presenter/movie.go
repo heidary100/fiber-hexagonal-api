@@ -14,10 +14,14 @@ type Movie struct {
 	AddedDate primitive.DateTime `json:"added-date"`
 }
 
+type SearchRequest struct {
+	Name string `query:"name"`
+}
+
 func MovieErrorResponse(err error) *fiber.Map {
 	return &fiber.Map{
 		"status": false,
-		"data":   "",
+		"data":   err,
 		"error":  err.Error(),
 	}
 }

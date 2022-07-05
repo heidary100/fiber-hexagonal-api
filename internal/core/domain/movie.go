@@ -10,7 +10,3 @@ type Movie struct {
 	Info      string             `json:"info"`
 	AddedDate primitive.DateTime `json:"added-date"`
 }
-
-type SearchRequest struct {
-	Name string `json:"name"`
-}

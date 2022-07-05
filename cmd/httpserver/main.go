@@ -6,11 +6,12 @@ import (
 	"log"
 	"time"
 
-	usersservice "github.com/heidary100/fiber-hexagonal-api/internal/core/service/user"
-	usersrepository "github.com/heidary100/fiber-hexagonal-api/internal/repositories"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	moviesservice "github.com/heidary100/fiber-hexagonal-api/internal/core/service/movie"
+	usersservice "github.com/heidary100/fiber-hexagonal-api/internal/core/service/user"
+	moviesrepository "github.com/heidary100/fiber-hexagonal-api/internal/repositories/movie"
+	usersrepository "github.com/heidary100/fiber-hexagonal-api/internal/repositories/user"
 	"github.com/heidary100/fiber-hexagonal-api/internal/routes"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -27,6 +28,10 @@ func RunFiberApp(port string, mongoUri string, dbName string) {
 	userRepo := usersrepository.NewRepo(userCollection)
 	userService := usersservice.NewService(userRepo)
 
+	movieCollection := db.Collection("movies")
+	movieRepo := moviesrepository.NewRepo(movieCollection)
+	movieService := moviesservice.NewService(movieRepo)
+
 	app := fiber.New()
 	app.Use(cors.New())
 	app.Get("/", func(ctx *fiber.Ctx) error {
@@ -34,6 +39,7 @@ func RunFiberApp(port string, mongoUri string, dbName string) {
 	})
 	api := app.Group("/api")
 	routes.UserRouter(api, userService)
+	routes.MovieRouter(api, movieService)
 	defer cancel()
 	log.Fatal(app.Listen(":" + port))
 }

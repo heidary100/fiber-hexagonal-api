@@ -22,7 +22,6 @@ func NewRepo(collection *mongo.Collection) ports.UsersRepository {
 	}
 }
 
-//CreateBook is a mongo repository that helps to create books
 func (r *repository) CreateUser(user *domain.User) (*domain.User, error) {
 	user.ID = primitive.NewObjectID()
 	// book.CreatedAt = time.Now()
@@ -34,7 +33,6 @@ func (r *repository) CreateUser(user *domain.User) (*domain.User, error) {
 	return user, nil
 }
 
-//ReadBook is a mongo repository that helps to fetch books
 func (r *repository) ReadUser() (*[]presenter.User, error) {
 	var users []presenter.User
 	cursor, err := r.Collection.Find(context.Background(), bson.D{})
@@ -49,7 +47,6 @@ func (r *repository) ReadUser() (*[]presenter.User, error) {
 	return &users, nil
 }
 
-//UpdateBook is a mongo repository that helps to update books
 func (r *repository) UpdateUser(book *domain.User) (*domain.User, error) {
 	// book.UpdatedAt = time.Now()
 	_, err := r.Collection.UpdateOne(context.Background(), bson.M{"_id": book.ID}, bson.M{"$set": book})
@@ -59,7 +56,6 @@ func (r *repository) UpdateUser(book *domain.User) (*domain.User, error) {
 	return book, nil
 }
 
-//DeleteBook is a mongo repository that helps to delete books
 func (r *repository) DeleteUser(ID string) error {
 	bookID, err := primitive.ObjectIDFromHex(ID)
 	if err != nil {

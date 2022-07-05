@@ -15,5 +15,5 @@ type UsersRepository interface {
 type MoviesRepository interface {
 	CreateMovie(user *domain.Movie) (*domain.Movie, error)
 	ReadMovie() (*[]presenter.Movie, error)
-	DeleteUser(ID string) error
+	DeleteMovie(ID string) error
 }
