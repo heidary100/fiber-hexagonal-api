@@ -10,14 +10,9 @@ type UsersService interface {
 	FetchUsers() (*[]presenter.User, error)
 	UpdateUser(user *domain.User) (*domain.User, error)
 	RemoveUser(ID string) error
-
-	// InsertBook(book *entities.Book) (*entities.Book, error)
-	// FetchBooks() (*[]presenter.Book, error)
-	// UpdateBook(book *entities.Book) (*entities.Book, error)
-	// RemoveBook(ID string) error
 }
 
 type MoviesService interface {
-	Search(Name string) ([]string, error)
+	Search(Name string) (presenter.SearchResponse, error)
 	FetchMovieUrls(Name string) (*[]presenter.Movie, error)
 }
