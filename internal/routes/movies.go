@@ -8,4 +8,5 @@ import (
 
 func MovieRouter(app fiber.Router, service ports.MoviesService) {
 	app.Get("/movies/search", handlers.Search(service))
+	app.Get("/movies/get-urls", handlers.GetUrls(service))
 }

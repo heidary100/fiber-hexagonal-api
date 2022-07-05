@@ -18,19 +18,37 @@ type SearchRequest struct {
 	Name string `query:"name"`
 }
 
-type SearchResponse struct {
+type GetUrlsRequest struct {
+	Name      string `query:"name"`
+	Extension string `query:"ext"`
+}
+
+type MovieSearchResponse struct {
 	Page         int          `json:"page"`
 	TotalPages   int          `json:"total_pages"`
 	TotalResults int          `json:"total_results"`
 	Results      []TMDBResult `json:"results"`
 }
 
+type GoogleSearchResponse struct {
+	CurrentPage  int                         `json:"currentPage"`
+	Keyword      string                      `json:"keyword"`
+	TotalResults int                         `json:"totalResults"`
+	Organic      []OrganicGoogleSearchResult `json:"organic"`
+}
+
+type OrganicGoogleSearchResult struct {
+	Title  string `json:"title"`
+	Domain string `json:"domain"`
+	Url    string `json:"url"`
+}
+
 type TMDBResult struct {
-	Id          int    `json:"id"`
-	Title       string `json:"title"`
-	VoteAverage string `json:"vote_average"`
-	ReleaseDate string `json:"release_date"`
-	Overview    string `json:"overview"`
+	Id          int     `json:"id"`
+	Title       string  `json:"title"`
+	VoteAverage float64 `json:"vote_average"`
+	ReleaseDate string  `json:"release_date"`
+	Overview    string  `json:"overview"`
 }
 
 func MovieErrorResponse(err error) *fiber.Map {

@@ -13,6 +13,6 @@ type UsersService interface {
 }
 
 type MoviesService interface {
-	Search(Name string) (presenter.SearchResponse, error)
-	FetchMovieUrls(Name string) (*[]presenter.Movie, error)
+	Search(Name string) (presenter.MovieSearchResponse, error)
+	FetchMovieUrls(Name string) (presenter.GoogleSearchResponse, error)
 }
