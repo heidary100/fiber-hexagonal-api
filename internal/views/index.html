@@ -22,22 +22,73 @@
 <div class="section no-pad-bot" id="index-banner">
     <div class="container">
         <br><br>
-        <h1 class="header center orange-text">Starter Template</h1>
+        <h1 class="header center orange-text">{{.Title}}</h1>
         <div class="row center">
-            <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
+            <h5 class="header col s12 light">Enter your favorite film name to get all download links!</h5>
         </div>
-        <div class="row center">
-            <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light orange">Get Started</a>
+
+        <div class="row">
+            <div class="col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">search</i>
+                        <input type="text" id="autocomplete-input" class="autocomplete">
+                        <label for="autocomplete-input">Autocomplete</label>
+                    </div>
+                </div>
+            </div>
         </div>
-        <br><br>
 
     </div>
 </div>
 
 
-
 <!--  Scripts-->
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+        $('input.autocomplete').autocomplete({
+            data: {},
+            onAutocomplete: function (e){
+                alert("todo: get download urls for " + e)
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        //Autocomplete
+        $("#autocomplete-input").change(function () {
+            const query = $(this).val()
+            $("#autocomplete-input").autocomplete("updateData", {});
+            $.ajax({
+                type: 'GET',
+                url: '/api/movies/search?name=' + encodeURI(query),
+                success: function (response) {
+                    if (response.status) {
+                        const acData = {}
+                        const results = response["data"]["results"];
+                        for (var i = 0; i < results.length; i++) {
+                            const title = results[i]["title"] +
+                                " (" +
+                                results[i]["release_date"].substring(0, results[i]["release_date"].indexOf("-")) +
+                                ") - " +
+                                results[i]["vote_average"];
+                            acData[title] = "https://image.tmdb.org/t/p/w200/" + results[i]["poster_path"];
+                        }
+
+                        $("#autocomplete-input").autocomplete("updateData", acData );
+                    }
+
+
+                }
+            });
+        });
+    });
+
+</script>
 </body>
 </html>

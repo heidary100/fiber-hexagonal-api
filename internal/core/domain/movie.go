@@ -19,6 +19,7 @@ type MovieInfo struct {
 	Id          int     `json:"id"`
 	Title       string  `json:"title"`
 	VoteAverage float64 `json:"vote_average"`
+	PosterPath  string  `json:"poster_path"`
 	ReleaseDate string  `json:"release_date"`
 	Overview    string  `json:"overview"`
 }
