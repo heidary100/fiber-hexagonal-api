@@ -13,7 +13,7 @@ type UsersRepository interface {
 }
 
 type MoviesRepository interface {
-	CreateMovie(user *domain.Movie) (*domain.Movie, error)
+	CreateMovie(movie *domain.Movie) (*domain.Movie, error)
 	ReadMovie() (*[]presenter.Movie, error)
 	DeleteMovie(ID string) error
 }
