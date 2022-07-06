@@ -3,6 +3,7 @@ package httpserver
 import (
 	"context"
 	"fmt"
+	"github.com/gofiber/template/html"
 	"log"
 	"time"
 
@@ -32,11 +33,19 @@ func RunFiberApp(port string, mongoUri string, dbName string) {
 	movieRepo := moviesrepository.NewRepo(movieCollection)
 	movieService := moviesservice.NewService(movieRepo)
 
-	app := fiber.New()
+	// view engine
+	engine := html.New("./internal/views", ".html")
+	app := fiber.New(fiber.Config{
+		Views: engine,
+	})
 	app.Use(cors.New())
 	app.Get("/", func(ctx *fiber.Ctx) error {
-		return ctx.Send([]byte("Welcome to the fiber-hexagonal-api mongo user manager!"))
+		return ctx.Render("index", fiber.Map{
+			"Title": "Fiber Film Finder",
+		})
+		//return ctx.Send([]byte("Welcome to the fiber-hexagonal-api mongo user manager!"))
 	})
+
 	api := app.Group("/api")
 	routes.UserRouter(api, userService)
 	routes.MovieRouter(api, movieService)
