@@ -3,7 +3,6 @@ package moviesservice
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gocolly/colly/v2"
 	"github.com/heidary100/fiber-hexagonal-api/internal/core/ports"
 	"github.com/heidary100/fiber-hexagonal-api/internal/presenter"
 	"io"
@@ -11,7 +10,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"sync"
 	"time"
 )
 
@@ -33,49 +31,11 @@ func (s *service) FetchMovieUrls(name string) (presenter.GoogleSearchResponse, e
 		go fetch(gr.Url, ch) // start a goroutine
 	}
 	for range googleResult.Organic {
-		fmt.Println(<-ch) // receive from channel ch
+		fmt.Println(<-ch) // here we will get html body
 	}
 	fmt.Printf("%.2fs elapsed\n", time.Since(start).Seconds())
 	return googleResult, err
 }
-
-//func (s *service) FetchMovieUrls(name string) (presenter.GoogleSearchResponse, error) {
-//	fmt.Println("+++++ Start searching...", name)
-//	start := time.Now()
-//	googleResult, err := searchInGoogle(name, 0)
-//
-//	// async
-//	//fetchFileUrlsFromWebpageAsync(googleResult, []string{".mp4"})
-//
-//	// sync
-//	rl := len(googleResult.Organic)
-//	//c := make(chan string)
-//	//for i, eachResult := range googleResult.Organic {
-//	//	fmt.Println("- Scraping html:", i+1, "of", rl, eachResult.Domain)
-//	//	go fetchWebpageConcurrent(eachResult.Url, c)
-//	//	cr := <-c
-//	//	// here we got html content og page
-//	//	fmt.Println("> Got body from channel", len(cr))
-//	//}
-//
-//	// Using working groups
-//	c := make(chan string)
-//	var wg sync.WaitGroup
-//	wg.Add(len(googleResult.Organic))
-//	for i, eachResult := range googleResult.Organic {
-//		fmt.Println("\n\n\n - Scraping html:", i+1, "of", rl, eachResult.Domain)
-//		go fetchWebpageWG(eachResult.Url, c, &wg)
-//		cr := <-c
-//		// here we got html content og page
-//		fmt.Println("> Got body from channel", len(cr))
-//	}
-//
-//	fmt.Println("+ Waiting for goroutines to finish...")
-//	wg.Wait()
-//	fmt.Println("- Done!")
-//	log.Printf("#### fetch all urls, execution time %s\n", time.Since(start))
-//	return googleResult, err
-//}
 
 func (s *service) Search(name string) (presenter.MovieSearchResponse, error) {
 	sr, err := searchInTMDB(name)
@@ -599,76 +559,6 @@ func searchInGoogle(name string, start int) (presenter.GoogleSearchResponse, err
 	return gsr, nil
 }
 
-func fetchFileUrlsFromWebpageSync(url string, extensions []string) {
-	//c.OnHTML("a[href]", func(e *colly.HTMLElement) {
-	//	text := e.Text
-	//	path := e.Attr("href")
-	//	ext := filepath.Ext(path)
-	//
-	//	fmt.Println(text, path, ext)
-	//})
-
-	c := colly.NewCollector()
-
-	c.OnHTML("title", func(e *colly.HTMLElement) {
-		fmt.Println(e.Text)
-	})
-
-	c.OnRequest(func(r *colly.Request) {
-		fmt.Println("Visiting", r.URL)
-	})
-
-	c.Visit(url)
-}
-
-func fetchFileUrlsFromWebpageConcurrent(url string, extensions []string, c chan string) {
-	co := colly.NewCollector()
-
-	co.OnHTML("title", func(e *colly.HTMLElement) {
-		fmt.Println(e.Text)
-		c <- e.Text
-	})
-
-	co.OnRequest(func(r *colly.Request) {
-		fmt.Println("Visiting", r.URL)
-	})
-
-	co.Visit(url)
-}
-
-func fetchWebpageConcurrent(url string, c chan string) {
-	start := time.Now()
-	co := colly.NewCollector()
-
-	co.OnHTML("body", func(e *colly.HTMLElement) {
-		c <- e.Text
-		log.Printf("* fetch body, execution time %s\n", time.Since(start))
-	})
-
-	co.OnRequest(func(r *colly.Request) {
-		fmt.Println("# Fetching webpage body:", r.URL)
-	})
-
-	co.Visit(url)
-}
-
-func fetchWebpageWG(url string, c chan string, wg *sync.WaitGroup) {
-	defer wg.Done()
-	start := time.Now()
-	co := colly.NewCollector()
-
-	co.OnHTML("body", func(e *colly.HTMLElement) {
-		c <- e.Text
-		log.Printf("* fetch body, execution time %s\n", time.Since(start))
-	})
-
-	co.OnRequest(func(r *colly.Request) {
-		fmt.Println("# Fetching webpage body:", r.URL)
-	})
-
-	co.Visit(url)
-}
-
 func fetch(url string, ch chan<- string) {
 	start := time.Now()
 	resp, err := http.Get(url)
@@ -685,22 +575,6 @@ func fetch(url string, ch chan<- string) {
 	}
 	secs := time.Since(start).Seconds()
 	ch <- fmt.Sprintf("%.2fs  %7d  %s", secs, nbytes, url)
-}
-
-func fetchFileUrlsFromWebpageAsync(googleSearchResult presenter.GoogleSearchResponse, extensions []string) {
-	c := colly.NewCollector(
-		colly.Async(),
-	)
-
-	c.OnHTML("title", func(e *colly.HTMLElement) {
-		fmt.Println(e.Text)
-	})
-
-	for _, gr := range googleSearchResult.Organic {
-		c.Visit(gr.Url)
-	}
-
-	c.Wait()
 }
 
 func hasExtension(s []string, e string) bool {
