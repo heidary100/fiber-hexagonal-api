@@ -3,13 +3,13 @@ package moviesservice
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/heidary100/fiber-hexagonal-api/internal/core/ports"
 	"github.com/heidary100/fiber-hexagonal-api/internal/presenter"
-	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"time"
 )
 
@@ -23,18 +23,19 @@ func NewService(r ports.MoviesRepository) ports.MoviesService {
 	}
 }
 
-func (s *service) FetchMovieUrls(name string) (presenter.GoogleSearchResponse, error) {
+func (s *service) FetchMovieUrls(name string, extensions []string) ([]presenter.FetchUrlResponse, error) {
 	googleResult, err := searchInGoogle(name, 0)
 	start := time.Now()
-	ch := make(chan string)
+	ch := make(chan presenter.FetchUrlResponse)
 	for _, gr := range googleResult.Organic {
-		go fetch(gr.Url, ch) // start a goroutine
+		go fetch(gr.Url, extensions, ch) // start a goroutine
 	}
+	var furArray []presenter.FetchUrlResponse
 	for range googleResult.Organic {
-		fmt.Println(<-ch) // here we will get html body
+		furArray = append(furArray, <-ch)
 	}
 	fmt.Printf("%.2fs elapsed\n", time.Since(start).Seconds())
-	return googleResult, err
+	return furArray, err
 }
 
 func (s *service) Search(name string) (presenter.MovieSearchResponse, error) {
@@ -559,27 +560,52 @@ func searchInGoogle(name string, start int) (presenter.GoogleSearchResponse, err
 	return gsr, nil
 }
 
-func fetch(url string, ch chan<- string) {
+func fetch(url string, extensions []string, ch chan<- presenter.FetchUrlResponse) {
 	start := time.Now()
 	resp, err := http.Get(url)
+	var fuResult presenter.FetchUrlResponse
+	fuResult.WebPageUrl = url
 	if err != nil {
-		ch <- fmt.Sprint(err) // send to channel ch
+		log.Fatal(err)
 		return
 	}
 
-	nbytes, err := io.Copy(ioutil.Discard, resp.Body)
-	resp.Body.Close() // don't leak resources
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+
 	if err != nil {
-		ch <- fmt.Sprintf("while reading %s: %v", url, err)
+		log.Fatal(err)
 		return
 	}
+
+	links := doc.Find("a").Map(func(i int, sel *goquery.Selection) string {
+		return sel.AttrOr("href", "")
+	})
+
+	var properLinks []string
+
+	for _, link := range links {
+		if hasExtension(extensions, link) {
+			properLinks = append(properLinks, link)
+		}
+	}
+
+	resp.Body.Close()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
 	secs := time.Since(start).Seconds()
-	ch <- fmt.Sprintf("%.2fs  %7d  %s", secs, nbytes, url)
+	fmt.Sprintf("%.2fs   %s", secs, url)
+
+	fuResult.Urls = properLinks
+	ch <- fuResult
 }
 
-func hasExtension(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
+func hasExtension(extensions []string, url string) bool {
+	fExt := filepath.Ext(url)
+	for _, eachExt := range extensions {
+		if eachExt == fExt {
 			return true
 		}
 	}

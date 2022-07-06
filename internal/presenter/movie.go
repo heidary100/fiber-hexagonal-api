@@ -40,6 +40,11 @@ type MovieSearchResponse struct {
 	Results      []TMDBResult `json:"results"`
 }
 
+type FetchUrlResponse struct {
+	WebPageUrl string   `json:"web_page_url"`
+	Urls       []string `json:"urls"`
+}
+
 type GoogleSearchResponse struct {
 	CurrentPage  int                         `json:"currentPage"`
 	Keyword      string                      `json:"keyword"`

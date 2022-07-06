@@ -6,6 +6,7 @@ import (
 	"github.com/heidary100/fiber-hexagonal-api/internal/core/ports"
 	"github.com/heidary100/fiber-hexagonal-api/internal/presenter"
 	"net/http"
+	"strings"
 )
 
 func Search(service ports.MoviesService) fiber.Handler {
@@ -43,7 +44,7 @@ func GetUrls(service ports.MoviesService) fiber.Handler {
 		}
 		fmt.Println(sr.Name)
 		fmt.Println(sr.Extension)
-		gsr, err := service.FetchMovieUrls(sr.Name)
+		gsr, err := service.FetchMovieUrls(sr.Name+` "دانلود رایگان فیلم"`, strings.Split(sr.Extension, ","))
 		if err != nil {
 			c.Status(http.StatusInternalServerError)
 			return c.JSON(presenter.MovieErrorResponse(err))
