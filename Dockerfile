@@ -1,5 +1,5 @@
 # Get Go image from DockerHub.
-FROM golang:1.16.6 AS api
+FROM golang:alpine AS api
 
 # Set working directory.
 WORKDIR /compiler
@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build our application.
-RUN CGO_ENABLED=0 GOOS=linux go build -o fiber-api ./cmd/httpserver/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o fiber-api ./main.go
 
 # Use 'scratch' image for super-mini build.
 FROM scratch AS prod
