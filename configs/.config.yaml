@@ -1,0 +1,3 @@
+port: 3000
+name: golang fiber file api
+version: v1.0.0

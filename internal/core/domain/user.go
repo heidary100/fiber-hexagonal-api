@@ -1,14 +1,14 @@
 package domain
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
+)
 
 type User struct {
-	ID       primitive.ObjectID `json:"id"  bson:"_id,omitempty"`
-	Name     string             `json:"name"`
-	Username string             `json:"username"`
-}
-
-// DeleteRequest struct is used to parse Delete Reqeusts for users
-type DeleteRequest struct {
-	ID string `json:"id"`
+	ID        primitive.ObjectID
+	Name      string
+	Username  string
+	AddedAt   time.Time
+	UpdatedAt time.Time
 }
