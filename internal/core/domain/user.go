@@ -1,14 +1,24 @@
 package domain
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type User struct {
-	ID        primitive.ObjectID
-	Name      string
-	Username  string
-	AddedAt   time.Time
-	UpdatedAt time.Time
+	UUID      uuid.UUID `db:"uuid" json:"id"`
+	Name      string    `db:"name" json:"name"`
+	Email     string    `db:"email" json:"email"`
+	Password  string    `db:"password" json:"password"`
+	CreatedAt time.Time `db:"created_at" json:"created_at" `
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at" `
+}
+
+type UserList struct {
+	UUID      uuid.UUID `db:"uuid" json:"id"`
+	Name      string    `db:"name" json:"name"`
+	Email     string    `db:"email" json:"email"`
+	CreatedAt time.Time `db:"created_at" json:"created_at" `
+	UpdatedAt time.Time `db:"updated_at" json:"updated_at" `
 }

@@ -8,3 +8,7 @@ type UserHandler interface {
 	Update(c *fiber.Ctx) error
 	Remove(c *fiber.Ctx) error
 }
+
+type FilmHandler interface {
+	Search(c *fiber.Ctx) error
+}

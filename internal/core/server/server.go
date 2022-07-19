@@ -9,11 +9,13 @@ import (
 
 type Server struct {
 	userHandlers ports.UserHandler
+	filmHandlers ports.FilmHandler
 }
 
-func NewServer(userHandlers ports.UserHandler) *Server {
+func NewServer(userHandlers ports.UserHandler, filmHandlers ports.FilmHandler) *Server {
 	return &Server{
 		userHandlers: userHandlers,
+		filmHandlers: filmHandlers,
 	}
 }
 
@@ -23,6 +25,7 @@ func (s *Server) Initialize(port string) error {
 
 	api := app.Group("/api")
 	routes.UserRouter(api, s.userHandlers)
+	routes.FilmRouter(api, s.filmHandlers)
 
 	return app.Listen(port)
 }

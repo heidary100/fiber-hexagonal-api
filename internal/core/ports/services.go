@@ -17,3 +17,7 @@ type FileService interface {
 	Update(file *domain.File) (*domain.File, error)
 	Remove(ID string) error
 }
+
+type FilmService interface {
+	Search(q string) ([]domain.Film, error)
+}

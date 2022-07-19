@@ -36,7 +36,7 @@ func (h *UserHandler) Add(c *fiber.Ctx) error {
 		return nil
 	}
 	//TODO validation
-	if requestBody.Username == "" || requestBody.Name == "" {
+	if requestBody.Email == "" || requestBody.Name == "" {
 		c.Status(http.StatusBadRequest)
 		return nil
 	}
