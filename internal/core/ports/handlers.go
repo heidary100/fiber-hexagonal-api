@@ -12,3 +12,7 @@ type UserHandler interface {
 type FilmHandler interface {
 	Search(c *fiber.Ctx) error
 }
+
+type MusicHandler interface {
+	Search(c *fiber.Ctx) error
+}

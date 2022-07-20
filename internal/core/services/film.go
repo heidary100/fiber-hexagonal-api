@@ -7,10 +7,13 @@ import (
 )
 
 type filmService struct {
+	repository ports.FilmRepository
 }
 
-func NewFilmService() ports.FilmService {
-	return &filmService{}
+func NewFilmService(r ports.FilmRepository) ports.FilmService {
+	return &filmService{
+		repository: r,
+	}
 }
 
 func (s *filmService) Search(q string) ([]domain.Film, error) {

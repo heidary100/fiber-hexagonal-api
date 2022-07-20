@@ -8,14 +8,16 @@ import (
 )
 
 type Server struct {
-	userHandlers ports.UserHandler
-	filmHandlers ports.FilmHandler
+	userHandlers  ports.UserHandler
+	filmHandlers  ports.FilmHandler
+	musicHandlers ports.MusicHandler
 }
 
-func NewServer(userHandlers ports.UserHandler, filmHandlers ports.FilmHandler) *Server {
+func NewServer(userHandlers ports.UserHandler, filmHandlers ports.FilmHandler, musicHandler ports.MusicHandler) *Server {
 	return &Server{
-		userHandlers: userHandlers,
-		filmHandlers: filmHandlers,
+		userHandlers:  userHandlers,
+		filmHandlers:  filmHandlers,
+		musicHandlers: musicHandler,
 	}
 }
 
@@ -26,6 +28,7 @@ func (s *Server) Initialize(port string) error {
 	api := app.Group("/api")
 	routes.UserRouter(api, s.userHandlers)
 	routes.FilmRouter(api, s.filmHandlers)
+	routes.MusicRouter(api, s.musicHandlers)
 
 	return app.Listen(port)
 }

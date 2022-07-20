@@ -15,16 +15,21 @@ var (
 		RunE: func(cmd *cobra.Command, args []string) error {
 			//repositories
 			userRepository := repositories.NewUserRepository()
+			filmRepository := repositories.NewFilmRepository()
+			musicRepository := repositories.NewMusicRepository()
 			//services
 			userService := services.NewUserService(userRepository)
-			filmService := services.NewFilmService()
+			filmService := services.NewFilmService(filmRepository)
+			musicService := services.NewMusicService(musicRepository)
 			//handlers
 			userHandlers := handlers.NewUserHandlers(userService)
 			filmHandlers := handlers.NewFilmHandlers(filmService)
+			musicHandlers := handlers.NewMusicHandlers(musicService)
 			//server
 			httpServer := NewServer(
 				userHandlers,
 				filmHandlers,
+				musicHandlers,
 			)
 			return httpServer.Initialize(":" + viper.GetString("PORT"))
 		},

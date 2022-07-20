@@ -23,3 +23,6 @@ type FileRepository interface {
 
 type FilmRepository interface {
 }
+
+type MusicRepository interface {
+}

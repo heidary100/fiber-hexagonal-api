@@ -7,34 +7,34 @@ import (
 	"github.com/heidary100/fiber-hexagonal-api/internal/core/ports"
 )
 
-type postgresRepository struct {
+type userRepository struct {
 }
 
-func (p postgresRepository) FindAll(ctx context.Context) ([]*domain.UserList, error) {
+func (r userRepository) FindAll(ctx context.Context) ([]*domain.UserList, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p postgresRepository) FindByID(ctx context.Context, uuid uuid.UUID) (*domain.UserList, error) {
+func (r userRepository) FindByID(ctx context.Context, uuid uuid.UUID) (*domain.UserList, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p postgresRepository) Add(ctx context.Context, user *domain.User) error {
+func (r userRepository) Add(ctx context.Context, user *domain.User) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p postgresRepository) Update(ctx context.Context, uuid uuid.UUID, user *domain.User) error {
+func (r userRepository) Update(ctx context.Context, uuid uuid.UUID, user *domain.User) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p postgresRepository) Delete(ctx context.Context, uuid uuid.UUID) error {
+func (r userRepository) Delete(ctx context.Context, uuid uuid.UUID) error {
 	//TODO implement me
 	panic("implement me")
 }
 
 func NewUserRepository() ports.UserRepository {
-	return &postgresRepository{}
+	return &userRepository{}
 }
