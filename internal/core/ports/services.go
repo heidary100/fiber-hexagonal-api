@@ -16,6 +16,8 @@ type FileService interface {
 	Fetch() (*[]domain.File, error)
 	Update(file *domain.File) (*domain.File, error)
 	Remove(ID string) error
+
+	Find(name string, kind string) ([]domain.File, error)
 }
 
 type FilmService interface {

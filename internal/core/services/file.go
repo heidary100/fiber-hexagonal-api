@@ -30,3 +30,7 @@ func (s *fileService) Update(file *domain.File) (*domain.File, error) {
 func (s *fileService) Remove(ID string) error {
 	return s.repository.Delete(ID)
 }
+
+func (s *fileService) Find(name string, kind string) ([]domain.File, error) {
+	return nil, nil
+}

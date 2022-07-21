@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/heidary100/fiber-hexagonal-api/internal/core/domain"
 	"github.com/heidary100/fiber-hexagonal-api/internal/core/ports"
+	"github.com/heidary100/fiber-hexagonal-api/internal/pkg/spotify"
 )
 
 type musicService struct {
@@ -16,16 +17,15 @@ func NewMusicService(r ports.MusicRepository) ports.MusicService {
 }
 
 func (s *musicService) Search(q string) ([]domain.Music, error) {
-	var films []domain.Music
-	// TODO spotify
-	//result, err := tmdb.Search(q)
-	//if err != nil {
-	//	return films, err
-	//}
-	//for _, eachResult := range result.Results {
-	//	film := domain.Film{Name: eachResult.Title}
-	//	films = append(films, film)
-	//}
+	var d []domain.Music
+	result, err := spotify.Search(q)
+	if err != nil {
+		return d, err
+	}
+	for _, eachResult := range result.Tracks.Tracks {
+		music := domain.Music{Name: eachResult.Name}
+		d = append(d, music)
+	}
 
-	return films, nil
+	return d, nil
 }

@@ -16,3 +16,7 @@ type FilmHandler interface {
 type MusicHandler interface {
 	Search(c *fiber.Ctx) error
 }
+
+type FileHandler interface {
+	Find(c *fiber.Ctx) error
+}
