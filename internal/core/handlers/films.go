@@ -27,7 +27,7 @@ func (h *FilmHandler) Search(c *fiber.Ctx) error {
 	result, err := h.filmService.Search(q)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
-		return nil
+		return err
 	}
 	return c.JSON(result)
 }

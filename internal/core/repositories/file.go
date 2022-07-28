@@ -4,9 +4,9 @@ import (
 	"github.com/heidary100/fiber-hexagonal-api/internal/core/ports"
 )
 
-type filmRepository struct {
+type fileRepository struct {
 }
 
-func NewFilmRepository() ports.FilmRepository {
-	return &filmRepository{}
+func NewFileRepository() ports.FileRepository {
+	return &fileRepository{}
 }

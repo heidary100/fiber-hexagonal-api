@@ -17,19 +17,23 @@ var (
 			userRepository := repositories.NewUserRepository()
 			filmRepository := repositories.NewFilmRepository()
 			musicRepository := repositories.NewMusicRepository()
+			fileRepository := repositories.NewFileRepository()
 			//services
 			userService := services.NewUserService(userRepository)
 			filmService := services.NewFilmService(filmRepository)
 			musicService := services.NewMusicService(musicRepository)
+			fileService := services.NewFileService(fileRepository)
 			//handlers
 			userHandlers := handlers.NewUserHandlers(userService)
 			filmHandlers := handlers.NewFilmHandlers(filmService)
 			musicHandlers := handlers.NewMusicHandlers(musicService)
+			fileHandlers := handlers.NewFileHandlers(fileService)
 			//server
 			httpServer := NewServer(
 				userHandlers,
 				filmHandlers,
 				musicHandlers,
+				fileHandlers,
 			)
 			return httpServer.Initialize(":" + viper.GetString("PORT"))
 		},

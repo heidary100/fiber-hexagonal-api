@@ -15,10 +15,6 @@ type UserRepository interface {
 }
 
 type FileRepository interface {
-	Create(file *domain.File) (*domain.File, error)
-	Read() (*[]domain.File, error)
-	Update(file *domain.File) (*domain.File, error)
-	Delete(ID string) error
 }
 
 type FilmRepository interface {

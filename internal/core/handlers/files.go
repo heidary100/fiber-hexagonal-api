@@ -28,7 +28,7 @@ func (h *FileHandler) Find(c *fiber.Ctx) error {
 	result, err := h.fileService.Find(name, kind)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
-		return nil
+		return err
 	}
 	return c.JSON(result)
 }

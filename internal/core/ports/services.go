@@ -21,7 +21,7 @@ type FileService interface {
 }
 
 type FilmService interface {
-	Search(q string) ([]domain.Film, error)
+	Search(q string) ([]domain.FilmSearchResult, error)
 }
 
 type MusicService interface {
